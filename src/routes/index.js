@@ -1,16 +1,16 @@
 const passportJwt = require('../config/passportJwt')
-const authCtl = require('../controllers/authCtl')
+const userCtl = require('../controllers/userController')
 
 
 module.exports = app => {
     app.route('/signin')
-      .post(authCtl.signin)
+      .post(userCtl.signin)
     
     app.route('/signup')
-      .post(authCtl.signup)
+      .post(userCtl.signup)
 
     //private route, access only with token
     app.route('/')
       .all(passportJwt)
-      .get(authCtl.msgLogin)
+      .get(userCtl.msgLogin)
 }
