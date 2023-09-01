@@ -1,15 +1,14 @@
-const mongoose = require('mongoose')
-const { user, pass, host, port, db } = require('../config/dbVariables')
+const mongoose = require("mongoose");
 
-const url = `mongodb://${user}:${pass}@${host}:${port}/${db}`
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
-  useCreateIndex: true
-}
+  useCreateIndex: true,
+};
 
-mongoose.connect(url, options)
-.catch(err => console.log(err))
+mongoose
+  .connect(process.env.MONGO_URL, options)
+  .catch((err) => console.log(err));
 
-module.exports = mongoose
+module.exports = mongoose;
