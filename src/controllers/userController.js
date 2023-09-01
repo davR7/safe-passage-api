@@ -1,4 +1,4 @@
-const userModel = require("../database/models/userSchema")
+const { findOneUser, createUser } = require('../services')
 const { tokenGenerate, hashPassword, validatePassword } = require("../utils")
 
 exports.signin = async (req, res, next) => {
@@ -12,7 +12,7 @@ exports.signin = async (req, res, next) => {
     return res.status(400).send({ error: "Email and Password is required" })
   }
 
-  const user = await userModel.findOne({ email })
+  const user = await findOneUser({ email })
   if (!user)
     return res
       .status(400)
@@ -35,14 +35,14 @@ exports.signin = async (req, res, next) => {
 exports.signup = async (req, res, next) => {
   const { email, password, ...rest } = req.body
 
-  if (await userModel.findOne({ email }))
+  if (await findOneUser({ email }))
     return res
       .status(400)
       .json({ success: false, error: "User already exists" })
 
   try {
     const hash = await hashPassword(password)
-    const newUser = await userModel.create({ ...rest, email, password: hash })
+    const newUser = await createUser({ ...rest, email, password: hash })
     return res.status(201).json({ success: true, user: newUser })
   } catch (err) {
     next(err)
