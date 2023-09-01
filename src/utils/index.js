@@ -1,8 +1,8 @@
 const { tokenGenerate } = require("./token")
-const { passIsMatch, generateHash } = require("./hash")
+const { hashPassword, validatePassword } = require("./hash")
 
 module.exports = {
   tokenGenerate,
-  generateHash,
-  passIsMatch,
+  hashPassword,
+  validatePassword,
 };
