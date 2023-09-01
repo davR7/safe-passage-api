@@ -1,20 +1,10 @@
-# AUTH-EXAMPLE-BACKEND 
-Example of authentication and authorization in NodeJS using Json Web Token.
+# SafePassageApi
+SafePassageApi é um api feita com ExpressJS, que exemplifica como é
+realizada a autenticação utilizando JsonWebToken na plataforma NodeJS.
 
-## Project Setup
+## Requisitos:
+- Criar sua "secret key" e inserir no arquivo: config/secretKey.
+- Criar um arquivo .env com variavel MONGO_URL e inserir a url do seu banco de dados.
 
-```
-npm install
-```
-
-## Configuration
-
-Change the dbVariablesExample and dbVariablesExample files to:
-
-dbVariables and secretKey
-
-## Run Server
-
-```
-npm run dev
-```
+## Principais Scripts
+- npm run dev: Inicia modo de desenvolvimento.
