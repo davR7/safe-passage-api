@@ -1,57 +1,46 @@
-const modelUser = require('../database/models/userSchema')
-const secret = require('../config/secretKey')
-const bcript = require('bcrypt')
-const jwt = require('jsonwebtoken')
-
-const _this = this
-
-exports.tokenGenerate = (params = {}) => {
-  return jwt.sign(params, secret.key, { expiresIn: 86400 })
-}
+const bcript = require("bcrypt");
+const userModel = require("../database/models/userSchema");
+const { tokenGenerate } = require("../utils");
 
 exports.signin = async (req, res, next) => {
-   const { email, password } = req.body
+  const { email, password } = req.body;
 
-   if (!email && password) {
-     return res.status(400).send({ error: 'Email is required' })
-   } else if (email && !password) {
-     return res.status(400).send({ error: 'Password is required' })
-   } else if (!email && !password) {
-     return res.status(400).send({ error: 'Email and Password is required' })
-   }
+  if (!email && password) {
+    return res.status(400).send({ error: "Email is required" });
+  } else if (email && !password) {
+    return res.status(400).send({ error: "Password is required" });
+  } else if (!email && !password) {
+    return res.status(400).send({ error: "Email and Password is required" });
+  }
 
-   const dtUser = await modelUser.findOne({ email })
-   if (!dtUser)
-     return res.status(400).json({ error: 'Email is not registered' })
+  const dtUser = await userModel.findOne({ email });
+  if (!dtUser)
+    return res.status(400).json({ error: "Email is not registered" });
 
-   const passIsMatch = await bcript.compare(password, dtUser.password)
-   if (!passIsMatch)
-     return res.status(400).json({ error: 'Password is invalid' })
+  const passIsMatch = await bcript.compare(password, dtUser.password);
+  if (!passIsMatch)
+    return res.status(400).json({ error: "Password is invalid" });
 
-   const payload = {
-       firstName: dtUser.firstName,
-       lastName: dtUser.lastName,
-       email: dtUser.email
-   }
-   
-   const token = _this.tokenGenerate(payload)   
-   return res.json({ ...payload, token })
-}
+  const token = tokenGenerate({ id: dtUser.id });
+  return res.json({ success: true, token });
+};
 
 exports.signup = async (req, res, next) => {
-  const user = { ...req.body }
+  const user = { ...req.body };
 
   if (await userModel.findOne({ email: user.email }))
-    return res.status(400).json({ error: 'User already exists' })
-  
+    return res
+      .status(400)
+      .json({ success: false, error: "User already exists" });
+
   try {
-    await userModel.create(user)
-    return res.status(201).send()
-  } catch(err){
-    next(err)
+    const newUser = await userModel.create(user);
+    return res.status(201).json({ success: true, user: newUser });
+  } catch (err) {
+    next(err);
   }
-}
+};
 
 exports.msgLogin = (req, res, next) => {
-    return res.json({ msg: "You are logged in. :)" })
-}
+  return res.json({ msg: "You are logged in. :)" });
+};
