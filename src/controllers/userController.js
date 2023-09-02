@@ -18,7 +18,7 @@ exports.signin = async (req, res, next) => {
   } catch (err) {
     next(err)
   }
-};
+}
 
 exports.signup = async (req, res, next) => {
   const { fullname, email, password } = req.body
@@ -33,9 +33,9 @@ exports.signup = async (req, res, next) => {
   } catch (err) {
     next(err)
   }
-};
+}
 
 exports.readAuthUser = (req, res) => {
   const userId = req.user.id
   return res.json({ success: true, userId })
-};
+}
