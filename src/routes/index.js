@@ -1,16 +1,17 @@
-const passportJwt = require('../config/passportJwt')
 const userCtl = require('../controllers/userController')
+const passportJwt = require('../config/passportJwt')
+const { validateSignIn, validateSignUp } = require('../middlewares/validateRequest')
 
 
 module.exports = app => {
     app.route('/signin')
-      .post(userCtl.signin)
+      .post(validateSignIn, userCtl.signin)
     
     app.route('/signup')
-      .post(userCtl.signup)
+      .post(validateSignUp, userCtl.signup)
 
     //private route, access only with token
     app.route('/')
       .all(passportJwt)
-      .get(userCtl.msgLogin)
+      .get(userCtl.readAuthUser)
 }
